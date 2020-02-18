@@ -119,6 +119,30 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
     [client writeData:data callback:callback];
 }
 
+RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
+                  filePath:(NSString *)path
+                  terminationCharacter:(NSString*)terminationChar
+                  callback:(RCTResponseSenderBlock)callback) {
+    TcpSocketClient* client = [self findClient:cId];
+    if (!client) return;
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:pathForFile]) return;
+    
+    NSStringEncoding encoding;
+    NSError* error = nil;
+    NSString* writableString = [NSString stringWithContentsOfFile:path usedEncoding:&encoding error:&error];
+    
+    if (error != nil) return;
+    
+    NSString* base64String = [writableString stringByAppendingString:terminationChar];
+
+    // iOS7+
+    // TODO: use https://github.com/nicklockwood/Base64 for compatibility with earlier iOS versions
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
+    [client writeData:data callback:callback];
+}
+
 RCT_EXPORT_METHOD(end:(nonnull NSNumber*)cId) {
     [self endClient:cId];
 }
