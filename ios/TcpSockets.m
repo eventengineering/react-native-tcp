@@ -105,7 +105,7 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
     if (!client) return;
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:pathForFile]) return;
+    if (![fileManager fileExistsAtPath:path]) return;
     
     NSStringEncoding encoding;
     NSError* error = nil;
