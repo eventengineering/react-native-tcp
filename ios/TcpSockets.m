@@ -135,7 +135,7 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
     
     if (error != nil) return;
     
-    NSString* base64String = [[[writableString stringByAppendingString:terminationChar] dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+    NSString* base64String = [[[writableString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0] stringByAppendingString:terminationChar];
 
     // iOS7+
     // TODO: use https://github.com/nicklockwood/Base64 for compatibility with earlier iOS versions
