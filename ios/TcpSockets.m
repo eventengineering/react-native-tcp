@@ -139,7 +139,7 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
 
     // iOS7+
     // TODO: use https://github.com/nicklockwood/Base64 for compatibility with earlier iOS versions
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
     [client writeData:data callback:callback];
 }
 
