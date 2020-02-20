@@ -113,9 +113,9 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
     
     if (error != nil) return;
     
-    NSString* base64String = [[[writableString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0] stringByAppendingString:terminationChar];
+    NSString* writable = [[[writableString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0] stringByAppendingString:terminationChar];
 
-    NSData *data = [base64String dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [writable dataUsingEncoding:NSUTF8StringEncoding];
     [client writeData:data callback:callback];
 }
 
