@@ -97,6 +97,23 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
     [client writeData:data callback:callback];
 }
 
+RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
+                  filePath:(NSString *)path
+                  terminationCharacter:(NSString*)terminationChar
+                  callback:(RCTResponseSenderBlock)callback) {
+    TcpSocketClient* client = [self findClient:cId];
+    if (!client) return;
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:path]) return;
+    
+    NSData *fileData = [[NSData dataWithContentsOfFile:path]base64EncodedDataWithOptions:0];
+    NSString *writable = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] stringByAppendingString:terminationChar];
+    NSData *data = [writable dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [client writeData:data callback:callback];
+}
+
 RCT_EXPORT_METHOD(end:(nonnull NSNumber*)cId) {
     [self endClient:cId];
 }
