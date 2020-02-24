@@ -362,7 +362,19 @@ TcpSocket.prototype.writeFile = function(filePath, terminationCharacter, cb) {
       'Invalid data, filePath must be a string, not ' + typeof filePath);
   }
 
-  return stream.Duplex.prototype.writeFile.apply(this, arguments);
+  return Sockets.writeFile(this._id, filePath, terminationCharacter, (err) => {
+    if (this._timeout) {
+      this._activeTimer(this._timeout.msecs);
+    }
+
+    err = normalizeError(err);
+    if (err) {
+      this._debug('write failed', err);
+      return callback(err);
+    }
+
+    callback();
+  });
 };
 
 TcpSocket.prototype._write = function(buffer: any, encoding: ?String, callback: ?(err: ?Error) => void) : boolean {
