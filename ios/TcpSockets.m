@@ -107,15 +107,10 @@ RCT_EXPORT_METHOD(write:(nonnull NSNumber*)cId
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:path]) return;
     
-    NSStringEncoding encoding;
-    NSError* error = nil;
-    NSString* writableString = [NSString stringWithContentsOfFile:path usedEncoding:&encoding error:&error];
-    
-    if (error != nil) return;
-    
-    NSString* writable = [[[writableString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0] stringByAppendingString:terminationChar];
-
+    NSData *fileData = [[NSData dataWithContentsOfFile:path]base64EncodedDataWithOptions:0];
+    NSString *writable = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] stringByAppendingString:terminationChar];
     NSData *data = [writable dataUsingEncoding:NSUTF8StringEncoding];
+    
     [client writeData:data callback:callback];
 }
 
